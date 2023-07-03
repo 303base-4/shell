@@ -115,19 +115,15 @@ int execute(char *buffer)
     }
     int pid;
     pid = fork();
-    if(fork!=0){
+    if(pid==0){
+		if(execv(argv[0],argv)==-1){
+			printf("%s: no such command",buffer);
+			exit(0);
+		}
+        exit(0);
+    } else {
 		int status;
 		int result=wait(&status);
 		return 1;
-    } else {
-		if(execvp(argv[0],argv[1])==-1)
-		{
-			for(int i=0;i<argc-1;i++)
-			{
-				printf("%s ",argv[i]);
-			}
-			printf("%s: no such command",argv[i]);
-		}
-		exit(0);
     }
-    
+} 
