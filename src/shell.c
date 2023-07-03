@@ -60,7 +60,7 @@ void prefix()
 {
     char *cwd;
     cwd = getcwd(NULL, 0);
-    printf("%s$", cwd);
+    printf("%s$ ", cwd);
     free(cwd);
 }
 
