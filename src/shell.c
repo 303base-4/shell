@@ -58,20 +58,20 @@ static void external_command(const char *buffer, int argc, char **argv) // шпехн
     log_push(&Log, buffer);
     int pid;
     pid = fork();
-    if (pid == 0)
+    if (pid != 0)
     {
-        if (execv(argv[0], argv) == -1)
+        int status;
+        int id_1 = wait(&status);
+        if (id_1 == -1 || status != 0)
         {
-            printf("%s: no such command", buffer);
-            exit(0);
+            printf("%s: no such command\n", buffer);
         }
-        exit(0);
+        free_arg(argc, argv);
     }
     else
     {
-        int status;
-        int result = wait(&status);
-        free_arg(argc, argv);
+        execv(argv[0], argv);
+        exit(-1);
     }
 }
 /**
