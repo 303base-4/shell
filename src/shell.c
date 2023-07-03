@@ -75,7 +75,7 @@ int execute(char *buffer)
     {
         if (buffer[i] == ' ' || buffer[i] == '\t' || buffer[i] == '\n')
             continue;
-        argv = (char **)realloc(argv, (argc + 1) * sizeof(char *));
+        argv = (char **)realloc(argv, (argc + 2) * sizeof(char *));
         argv[argc] = (char *)malloc(sizeof(char));
         int cnt = 0;
         while (buffer[i] != ' ' && i < strlen(buffer))
@@ -86,6 +86,7 @@ int execute(char *buffer)
         argv[argc][cnt] = '\0';
         argc++;
     }
+    argv[argc] = NULL;
     // 根据解析后的参数调用相应子程序实现内部命令
     if (strcmp(argv[0], "cd") == 0)
     {
