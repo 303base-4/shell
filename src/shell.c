@@ -53,6 +53,27 @@ static void ls(const char *buffer, int argc, char **argv) // 该子程序用于�
     system("ls");
     free_arg(argc, argv);
 }
+static void external_command(const char *buffer, int argc, char **argv) // 该子程序用于执行外部命令
+{
+    log_push(&Log, buffer);
+    int pid;
+    pid = fork();
+    if (pid == 0)
+    {
+        if (execv(argv[0], argv) == -1)
+        {
+            printf("%s: no such command", buffer);
+            exit(0);
+        }
+        exit(0);
+    }
+    else
+    {
+        int status;
+        int result = wait(&status);
+        free_arg(argc, argv);
+    }
+}
 /**
  * shell的入口
  */
@@ -113,4 +134,6 @@ int execute(char *buffer)
         ls(buffer, argc, argv);
         return 1;
     }
+    external_command(buffer, argc, argv);
+    return 1;
 }
