@@ -112,4 +112,21 @@ int execute(char *buffer)
         ls(buffer, argc, argv);
         return 1;
     }
-}
+    int pid;
+    pid = fork();
+    if(fork!=0){
+		int status;
+		int result=wait(&status);
+		return 1;
+    } else {
+		if(execvp(argv[0],argv[1])==-1)
+		{
+			for(int i=0;i<argc-1;i++)
+			{
+				printf("%s ",argv[i]);
+			}
+			printf("%s: no such command",argv[i]);
+		}
+		exit(0);
+    }
+    
