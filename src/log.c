@@ -70,11 +70,14 @@ void log_push(log_t *l, const char *item)
 
 char *log_search(log_t *l, const char *prefix)
 {
+	char *s1;
+	s1=(char*)malloc(10000);
+	memset(s1,0,10000);
     node *p = l->head;
     while (p != NULL)
     {
         char *s;
-        s = p->cmd;
+        s = p->cmd;    
         int i = 0, flag = 0;
         if (strlen(prefix) > strlen(s))
         {
@@ -92,12 +95,18 @@ char *log_search(log_t *l, const char *prefix)
         }
         if (flag == 0)
         {
-            return p->cmd;
+            memset(s1,0,10000);
+		    strcpy(s1,s);
         }
-        else
-        {
-            p = p->next;
-        }
+        flag=0;
+        p = p->next;
     }
-    return NULL;
+    if(s1[0]==0)
+    {
+    	return NULL;
+	}
+    else
+    {
+    	return s1;
+	}
 }
