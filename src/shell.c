@@ -1,4 +1,7 @@
 #include "shell.h"
+
+log_t Log;
+
 /**
  * shell的入口
  */
