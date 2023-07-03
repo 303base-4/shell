@@ -4,7 +4,7 @@
 
 log_t Log;
 
-static void free_arg(int argc, char **argv)
+static void free_arg(int argc, char **argv) // 该子程序用于释放argv分配的内存
 {
     for (int i = 0; i < argc; i++)
     {
@@ -12,19 +12,19 @@ static void free_arg(int argc, char **argv)
     }
     free(argv);
 }
-static void cd(const char *buffer, int argc, char **argv)
+static void cd(const char *buffer, int argc, char **argv) // 该子程序用于实现cd命令
 {
     log_push(&Log, buffer);
     assert(argc <= 2);
     chdir(argv[1]);
     free_arg(argc, argv);
 }
-static void exit_shell(const char *buffer, int argc, char **argv)
+static void exit_shell(const char *buffer, int argc, char **argv) // 该子程序用于实现exit命令
 {
     log_push(&Log, buffer);
     free_arg(argc, argv);
 }
-static void hist(const char *buffer, int argc, char **argv)
+static void hist(const char *buffer, int argc, char **argv) // 该子程序用于实现!#命令
 {
     node *p = Log.head;
     while (p != NULL)
@@ -34,7 +34,7 @@ static void hist(const char *buffer, int argc, char **argv)
     }
     free_arg(argc, argv);
 }
-static void redo(const char *buffer, int argc, char **argv)
+static void redo(const char *buffer, int argc, char **argv) // 该子程序用于实现!prefix命令
 {
     char *cmd = log_search(&Log, argv[0] + 1);
     if (cmd == NULL)
@@ -47,7 +47,7 @@ static void redo(const char *buffer, int argc, char **argv)
     }
     free_arg(argc, argv);
 }
-static void ls(const char *buffer, int argc, char **argv)
+static void ls(const char *buffer, int argc, char **argv) // 该子程序用于实现ls命令
 {
     log_push(&Log, argv[0]);
     system("ls");
@@ -66,6 +66,9 @@ void prefix()
 
 int execute(char *buffer)
 {
+    // 解析buffer。以空格、制表符和回车符作为分隔符，将buffer解析为命令和参数。
+    // 解析后的存储格式类似于int main(int argc,char *argv[])函数的参数
+    // 其中argc用于存储参数总数，字符串数组argv[]用于存储参数。按照惯例，argv[0]应为命令本身。
     int argc = 0;
     char **argv = (char **)malloc(sizeof(char *));
     for (int i = 0; i < strlen(buffer); i++)
@@ -83,6 +86,7 @@ int execute(char *buffer)
         argv[argc][cnt] = '\0';
         argc++;
     }
+    // 根据解析后的参数调用相应子程序实现内部命令
     if (strcmp(argv[0], "cd") == 0)
     {
         cd(buffer, argc, argv);
